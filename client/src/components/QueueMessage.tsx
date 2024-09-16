@@ -23,10 +23,10 @@ export const QueueMessage = ({ queueName }: QueueMessageProps) => {
             alignItems="center"
             justifyContent="center"
             width="100%" 
-            padding="16px"
             gap={5}
         >
             <Button
+            
                 variant="contained"
                 color="primary"
                 onClick={getNextMessage}

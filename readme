@@ -1,0 +1,11 @@
+
+
+make sure to have npm, docker and docker compose installed.
+
+build the docker images using teh build scripts in the deployment folder.
+
+once the images are built run the following command inside the deployment folder 'docker compose up'
+
+once the services are up, enter the client directory and run npm install.
+
+once the dependencies are installed run npm start and enter localhost:3000 on the browser to enjoy the app

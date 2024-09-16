@@ -15,10 +15,7 @@ export const QueueSelector = ({ selectedQueue, handleQueueChange, allQueues }: Q
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
-            gap={3}
-            width="500px"
-            padding="100px 16px 16px 16px"
-            margin="auto"
+            width="100%" 
         >
             <Typography variant="h6" gutterBottom> Select Queue </Typography>
 
@@ -32,5 +29,5 @@ export const QueueSelector = ({ selectedQueue, handleQueueChange, allQueues }: Q
                 </Select>
             </FormControl>
         </Box>
-    );
+    )
 }
