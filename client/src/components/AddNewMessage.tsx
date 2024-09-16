@@ -11,9 +11,18 @@ export const AddNewMessage = ({ queueName }: AddNewMessageProps) => {
     const [message, setMessage] = useState<string>('');
     const [addNewMessageTrigger] = useAddMessageMutation();
 
+    const [error, setError] = useState<boolean>(false);
+
     const onAddNewMessageClicked = () => {
+
+        if(message === '') {
+            setError(true)
+            return
+        }
+        
         addNewMessageTrigger({ queueName, message })
         setMessage('')
+        setError(false)
     }
 
     return (
@@ -27,14 +36,15 @@ export const AddNewMessage = ({ queueName }: AddNewMessageProps) => {
 
             <Button
                 variant="contained"
-                color="primary"
+                color={error ? 'error': 'primary'}
                 onClick={onAddNewMessageClicked}
             >
-                Add New Message
+                { error ? 'Message cannot be empty': 'Add New Message' }
             </Button>
             
             <TextField
-                label="New Message"
+                error={error}
+                label={error ? 'Message cannot be empty': 'New Message'}
                 variant="outlined"
                 fullWidth
                 value={message}
