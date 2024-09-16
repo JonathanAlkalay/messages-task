@@ -1,9 +1,12 @@
 services:
   backend:
-    image: backend:0.1
+    image: backend:0.2
     container_name: backend_service
     ports:
-      - "8000:8000"
+      - "8080:8080"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     depends_on:
       - redis
   redis:

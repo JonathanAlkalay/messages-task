@@ -2,7 +2,7 @@ set -e
 
 git pull
 
-VERSION=0.1
+VERSION=0.2
 IMAGE_NAME=backend
 
 FULL_IMAGE_NAME=${IMAGE_NAME}:${VERSION}

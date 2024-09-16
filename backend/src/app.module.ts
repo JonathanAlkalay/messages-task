@@ -2,11 +2,20 @@ import { Module } from '@nestjs/common';
 import { MessagesController } from './controllers/messages.controller';
 import { MessagesService } from './services/messages.service';
 import { BullModule } from '@nestjs/bull';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    BullModule.forRoot({ redis: { host: 'localhost', port: 6379 } }),
-    BullModule.registerQueue(
+    BullModule.forRootAsync({
+      imports: [ConfigModule.forRoot()],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        redis: {
+          host: configService.getOrThrow('REDIS_HOST'),
+          port: configService.getOrThrow('REDIS_PORT')
+        }
+      }),
+    }),    BullModule.registerQueue(
       { name: 'message-queue-a' },
       { name: 'message-queue-b' },
       { name: 'message-queue-c' },
@@ -15,7 +24,7 @@ import { BullModule } from '@nestjs/bull';
     )  
   ],
   controllers: [MessagesController],
-  providers: [MessagesService],
+  providers: [MessagesService, ConfigService],
 })
 export class AppModule {}
 

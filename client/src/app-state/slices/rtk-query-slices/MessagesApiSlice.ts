@@ -7,7 +7,7 @@ const MessagesApiSlice = RootApiSlice.injectEndpoints({
     getAllQueues: builder.query<QueueName[], void>({
         query: () => {
             return {
-                url: `api`,
+                url: `api/all-queues`,
                 method: 'GET'
             }
         }
