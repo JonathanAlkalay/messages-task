@@ -1,24 +1,30 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
 import { MessagesService } from '../services/messages.service';
+import { CreateMessageRequest, GetNextMessageResponse, QueueName } from 'common_package';
 
-@Controller('queue')
+@Controller('api')
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 
-    @Post(':queue_name')
-    async addMessage(@Param('queue_name') queueName: string, @Body() { message }): Promise<void> {
-      return this.messagesService.addMessage(queueName, message);
+    @Get('all-queues')
+    async getAllQueues(): Promise<QueueName[]> {
+      return this.messagesService.getAllQueues()
     }
-  
+
     @Get(':queue_name')
-    async getMessage(@Param('queue_name') queueName: string): Promise<any> {
+    async getMessage(@Param('queue_name') queueName: QueueName): Promise<GetNextMessageResponse> {
       
-      const message = await this.messagesService.getMessage(queueName);
-  
+      const message = await this.messagesService.getMessage(queueName)
+
       if (message) {
-        return message;
+        return { message }
       }
-  
-      throw new HttpException('No message in queue', HttpStatus.NO_CONTENT);
+
+      throw new HttpException('No message in queue', HttpStatus.NO_CONTENT)
+    }
+
+    @Post(':queue_name')
+    async addMessage(@Param('queue_name') queueName: QueueName, @Body() { message }: CreateMessageRequest): Promise<void> {
+      return this.messagesService.addMessage(queueName, message)
     }
 }

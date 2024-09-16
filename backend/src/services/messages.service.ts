@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { QueueName } from 'common_package';
 
 @Injectable()
 export class MessagesService {
@@ -12,33 +13,48 @@ export class MessagesService {
     @InjectQueue('message-queue-e') private readonly messageQueueE: Queue
   ) {}
 
-  async addMessage(queueName: string, message: string): Promise<void> {
+
+  async getAllQueues(): Promise<QueueName[]> {
+    return ['message-queue-a', 'message-queue-b', 'message-queue-c', 'message-queue-d', 'message-queue-e']
+  }
+  
+  async addMessage(queueName: QueueName, message: string): Promise<void> {
     const queue = this.getQueueByName(queueName)
     await queue.add(message)
   }
 
-  async getMessage(queueName: string): Promise<any> {
-    const queue = this.getQueueByName(queueName);
-    const nextMessage = await queue.getNextJob();
+  async getMessage(queueName: QueueName): Promise<string | undefined> {
+    
+    const queue = this.getQueueByName(queueName)
+    const nextMessage = await queue.getNextJob()
    
-    return nextMessage.data 
-   
+    if(!nextMessage?.name) {
+      return undefined
+    }
+
+    return nextMessage.name 
   }
 
-  private getQueueByName(queueName: string): Queue | undefined {
+  private getQueueByName(queueName: QueueName): Queue | undefined {
     switch (queueName) {
-      case 'message-queue-a':
-        return this.messageQueueA;
-      case 'message-queue-b':
-        return this.messageQueueB;
-      case 'message-queue-c':
-        return this.messageQueueC;
-      case 'message-queue-d':
-        return this.messageQueueD;
-      case 'message-queue-e':
-        return this.messageQueueE;
-      default:
+      case 'message-queue-a': {
+        return this.messageQueueA
+      }
+      case 'message-queue-b': {
+        return this.messageQueueB
+      }
+      case 'message-queue-c': {
+        return this.messageQueueC
+      }
+      case 'message-queue-d': {
+        return this.messageQueueD
+      }
+      case 'message-queue-e': {
+        return this.messageQueueE
+      }
+      default: {
         throw new Error(`Queue ${queueName} not found`);
       }
+    }
   }
 }
